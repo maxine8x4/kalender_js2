@@ -21,20 +21,6 @@ let wochentagsname = datum.toLocaleDateString("de-DE", {
 });
 
 
-const tage = document.querySelectorAll("tbody td");
-tage.forEach(function(tag) {
-    if (tag.textContent == datum.getDate()) {
-        tag.classList.add("heute");
-    }
-});
-/*
-tage.forEach(function(tag) {
-    if (tag.textContent == datum.getDate()) {
-        tag.classList.add("heute");
-    }
-});
-*/
-
 const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 const nummern = ['', 'erste', 'zweite', 'dritte', 'vierte', 'fünfte'];
@@ -46,7 +32,7 @@ const year = datum.getFullYear();
 
 
                 //  0   1   2   3   4   5   6   7   8   9  10   11         
-let tageImMonat = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const tageImMonat = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 let anzahlTageImMonat = tageImMonat[datum.getMonth()];
         if (datum.getMonth() === 1 && istSchaltjahr(year)) {
                 anzahlTageImMonat++;
@@ -104,12 +90,41 @@ const letzterTag = new Date(year, month, 0);        // Letzter Tag des Monats
 */
 
 
+// Berechnung passender Tag zu Wochentag
+const ersterTagImMonat = new Date(year, month - 1, 1);
+const wochentagErsterTag = ersterTagImMonat.getDay();
+const kalendertabelle = document.getElementById("kalendertabelle");
+const tabellenFelder = kalendertabelle.querySelectorAll("td");          // = sucht in der Tabelle td
+
+// Berechnung dazu sonntag
+let startPosition;
+
+if (wochentagErsterTag === 0) {
+        startPosition = 6;
+} else {
+        startPosition = wochentagErsterTag -1;
+}
+
+let tag = 1;
+
+for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
+        tabellenFelder[i].textContent = tag;
+        tag++;
+}
+
+const tage = document.querySelectorAll("tbody td");
+tage.forEach(function(tag) {
+    if (tag.textContent == datum.getDate()) {
+        tag.classList.add("heute");
+    }
+});
+
 
 // Gesetzliche Feiertage in Deutschland
-let neujahr = day === 1 && month === 1;               
-let tagDerDeutschenEinheit = day === 3 && month === 10;     
-let ersterWeihnachtsfeiertag = day === 25 && month === 12;   
-let zweiterWeihnachtsfeiertag = day === 26 && month === 12;    
+const neujahr = day === 1 && month === 1;               
+const tagDerDeutschenEinheit = day === 3 && month === 10;     
+const ersterWeihnachtsfeiertag = day === 25 && month === 12;   
+const zweiterWeihnachtsfeiertag = day === 26 && month === 12;    
    
 
 
