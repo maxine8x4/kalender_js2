@@ -91,8 +91,8 @@ const letzterTag = new Date(year, month, 0);        // Letzter Tag des Monats
 
 
 // Berechnung passender Tag zu Wochentag
-const ersterTagImMonat = new Date(year, month - 1, 1);
-const wochentagErsterTag = ersterTagImMonat.getDay();
+const ersterTagImMonat = new Date(year, month - 1, 1);                 // Erstellt den 1. Tag des Monats
+const wochentagErsterTag = ersterTagImMonat.getDay();                   // Welcher Wochentag ist der erste Tag im Monat
 const kalendertabelle = document.getElementById("kalendertabelle");
 const tabellenFelder = kalendertabelle.querySelectorAll("td");          // = sucht in der Tabelle td
 
@@ -125,7 +125,29 @@ const neujahr = day === 1 && month === 1;
 const tagDerDeutschenEinheit = day === 3 && month === 10;     
 const ersterWeihnachtsfeiertag = day === 25 && month === 12;   
 const zweiterWeihnachtsfeiertag = day === 26 && month === 12;    
+
+//Histroische Ereignisse am heutigen Tag
+async function fetchData() {
    
+        try{
+
+                const response = await fetch("https://history.muffinlabs.com/date");
+
+                if (!response.ok) {
+                        throw new Error("HTTP error!");
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+        return data;
+        }    
+        catch(error){
+                console.error(error);
+        }
+
+}
+
 
 
 if (neujahr) {
@@ -144,10 +166,27 @@ else {
     document.getElementById("info5").textContent = "Heute ist kein gesetzlicher Feiertag in Deutschland.";
 }
 
-
+document.getElementById("historische Ereignisse").textContent = 
 document.getElementById("titel").textContent = "Kalenderblatt vom " + datumText;
 document.getElementById("info1").textContent = "Der " + day + ". " + monatsName + " ist der " + nummern[wievielterWochentag] + " " + wochentagsname + " im Monat ";
 document.getElementById("info2").textContent = "Es handelt sich um den " + tagImJahr + ". Tag des Jahres " + year + ", was bedeutet, dass es noch " + verbleibendeTage + " Tage bis zum Jahresende sind.";
 document.getElementById("info4").textContent = "Der Monat " + monatsName + " hat insgesamt 31 Tage";
 document.getElementById("aktuellerMonat").textContent = monatsName;
 document.getElementById("h3").textContent = "Historische Ereignisse am " + day + "." + monatsName;
+
+
+
+
+fetch("https://history.muffinlabs.com/date")               // fetch = Daten holen
+        .then(response => {
+                if (!response.ok) {
+                        throw new Error("HTTP error! status: $(response.status)");
+        }
+        return response.json();
+})
+.then(data => {
+        console.log("Historische Ereignisse:", data);
+})
+.catch(error => {
+        console.error("Fehler beim laden der daten:", error);
+})
