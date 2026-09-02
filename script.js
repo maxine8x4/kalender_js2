@@ -1,23 +1,24 @@
-const datum = new Date();     
+const datum = new Date();
 
-document.title = "Kalenderblatt vom " + datum.toLocaleDateString("de-DE", { day: "2-digit",
+document.title = "Kalenderblatt vom " + datum.toLocaleDateString("de-DE", {
+        day: "2-digit",
         day: "2-digit",
         month: "long",
         year: "numeric"
 });
 
-const datumText = datum.toLocaleDateString("de-DE", {         
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
+const datumText = datum.toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
 });
 
 let monatsName = datum.toLocaleDateString("de-DE", {
-    month: "long"    
+        month: "long"
 });
 
 let wochentagsname = datum.toLocaleDateString("de-DE", {
-    weekday: "long"    
+        weekday: "long"
 });
 
 
@@ -25,18 +26,18 @@ const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', '
 const monate = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 const nummern = ['', 'erste', 'zweite', 'dritte', 'vierte', 'fünfte'];
 
-const day = datum.getDate();      
-const month = datum.getMonth() +1 ;         
-const year = datum.getFullYear();      
+const day = datum.getDate();
+const month = datum.getMonth() + 1;
+const year = datum.getFullYear();
 
 
 
-                //  0   1   2   3   4   5   6   7   8   9  10   11         
+//  0   1   2   3   4   5   6   7   8   9  10   11         
 const tageImMonat = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 let anzahlTageImMonat = tageImMonat[datum.getMonth()];
-        if (datum.getMonth() === 1 && istSchaltjahr(year)) {
-                anzahlTageImMonat++;
-        }
+if (datum.getMonth() === 1 && istSchaltjahr(year)) {
+        anzahlTageImMonat++;
+}
 
 
 // Berechnung Schaltjahr
@@ -44,8 +45,8 @@ function istSchaltjahr(jahr) {
         if (jahr % 400 == 0) {
                 return true;
         }
-        if (jahr % 4 == 0 && jahr % 100 !=0) {
-                return true; 
+        if (jahr % 4 == 0 && jahr % 100 != 0) {
+                return true;
         }
         return false;
 }
@@ -53,11 +54,11 @@ function istSchaltjahr(jahr) {
 function berechneTageSeitJahresbeginn(date) {
         let days = 0;
         for (let monthNo = 0; monthNo < date.getMonth(); monthNo++) {
-            days += tageImMonat [monthNo];    
+                days += tageImMonat[monthNo];
         }
         days += date.getDate(); // days = days + date.date;
         // days += istSchaltjahr(date.year) ? 1 : 0
-        if (istSchaltjahr(date.getFullYear())  && date.getMonth() > 1) {
+        if (istSchaltjahr(date.getFullYear()) && date.getMonth() > 1) {
                 days++;
         }
         return days;
@@ -75,10 +76,10 @@ const wievielterWochentag = Math.ceil(day / 7);         // Berechnung, welcher W
 
 
 // Berechnung der verbleibenden Tage bis zum Jahresende
-const jahresende = new Date(year, 11, 31);    
+const jahresende = new Date(year, 11, 31);
 const unterschiedEnde = jahresende - datum;     // Berechnung der Differenz zwischen dem aktuellen Datum und dem Jahresende in Millisekunden
 const verbleibendeTage = Math.ceil(unterschiedEnde / (1000 * 60 * 60 * 24));     // Berechnung der verbleibenden Tage bis zum Jahresende
-       
+
 
 const text = "Es ist der " + nummern[wievielterWochentag] + " " + wochentagsname + " im Monat.";       // Erstellung des Textes, der den Wochentag im Monat beschreibt
 
@@ -102,7 +103,7 @@ let startPosition;
 if (wochentagErsterTag === 0) {
         startPosition = 6;
 } else {
-        startPosition = wochentagErsterTag -1;
+        startPosition = wochentagErsterTag - 1;
 }
 
 let tag = 1;
@@ -113,36 +114,40 @@ for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMona
 }
 
 const tage = document.querySelectorAll("tbody td");
-tage.forEach(function(tag) {
-    if (tag.textContent == datum.getDate()) {
-        tag.classList.add("heute");
-    }
+tage.forEach(function (tag) {
+        if (tag.textContent == datum.getDate()) {
+                tag.classList.add("heute");
+        }
 });
 
 
 // Gesetzliche Feiertage in Deutschland
-const neujahr = day === 1 && month === 1;               
-const tagDerDeutschenEinheit = day === 3 && month === 10;     
-const ersterWeihnachtsfeiertag = day === 25 && month === 12;   
-const zweiterWeihnachtsfeiertag = day === 26 && month === 12;    
+const neujahr = day === 1 && month === 1;
+const tagDerDeutschenEinheit = day === 3 && month === 10;
+const ersterWeihnachtsfeiertag = day === 25 && month === 12;
+const zweiterWeihnachtsfeiertag = day === 26 && month === 12;
 
 //Histroische Ereignisse am heutigen Tag
 async function fetchData() {
-   
-        try{
 
-                const response = await fetch("https://history.muffinlabs.com/date");
+        try {
+
+                const today = new Date();
+                const month = today.getMonth() + 1;
+                const day = today.getDate() ;
+
+                const response = await fetch(`https://history.muffinlabs.com/date/${month}/${day}`);
 
                 if (!response.ok) {
                         throw new Error("HTTP error!");
+                }
+
+                const data = await response.json();
+
+                console.log(data.data.Events);
+                return data;
         }
-
-        const data = await response.json();
-
-        console.log(data);
-        return data;
-        }    
-        catch(error){
+        catch (error) {
                 console.error(error);
         }
 
@@ -163,30 +168,29 @@ else if (zweiterWeihnachtsfeiertag) {
         document.getElementById("info5").textContent = "Heute ist 'der zweite Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
 }
 else {
-    document.getElementById("info5").textContent = "Heute ist kein gesetzlicher Feiertag in Deutschland.";
+        document.getElementById("info5").textContent = "Heute ist kein gesetzlicher Feiertag in Deutschland.";
 }
 
-document.getElementById("historische Ereignisse").textContent = 
+
 document.getElementById("titel").textContent = "Kalenderblatt vom " + datumText;
 document.getElementById("info1").textContent = "Der " + day + ". " + monatsName + " ist der " + nummern[wievielterWochentag] + " " + wochentagsname + " im Monat ";
 document.getElementById("info2").textContent = "Es handelt sich um den " + tagImJahr + ". Tag des Jahres " + year + ", was bedeutet, dass es noch " + verbleibendeTage + " Tage bis zum Jahresende sind.";
 document.getElementById("info4").textContent = "Der Monat " + monatsName + " hat insgesamt 31 Tage";
 document.getElementById("aktuellerMonat").textContent = monatsName;
 document.getElementById("h3").textContent = "Historische Ereignisse am " + day + "." + monatsName;
+ 
 
+async function main() {
+        const data = await fetchData();
 
+        console.log(data);
+        const events = data.data.Events;
+        document.getElementById("ereignis1").textContent = events[0].text;
+        document.getElementById("ereignis2").textContent = events[1].text;
+        document.getElementById("ereignis3").textContent = events[2].text;
+        document.getElementById("ereignis4").textContent = events[3].text;
+        document.getElementById("ereignis5").textContent = events[4].text;
+}
 
+main();
 
-fetch("https://history.muffinlabs.com/date")               // fetch = Daten holen
-        .then(response => {
-                if (!response.ok) {
-                        throw new Error("HTTP error! status: $(response.status)");
-        }
-        return response.json();
-})
-.then(data => {
-        console.log("Historische Ereignisse:", data);
-})
-.catch(error => {
-        console.error("Fehler beim laden der daten:", error);
-})
