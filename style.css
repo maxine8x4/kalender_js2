@@ -1,7 +1,7 @@
 @import url('http://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
 
 h1 {
-    text-align: center;
+    /*text-align: center;*/
     color: #ff2a8a;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -30,7 +30,7 @@ h3 {
 }
 
 body    {
-    background-image: url("cyberpunk.jpg");
+    background-image: url("ChatGPT Image 3. Sept. 2026, 19_56_50.png");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;

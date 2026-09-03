@@ -90,26 +90,27 @@ const letzterTag = new Date(year, month, 0);        // Letzter Tag des Monats
 */
 
 
-// Berechnung passender Tag zu Wochentag
+// Berechnung passender Tag(Zahl) zu Wochentag(Mo, Di..)
 const ersterTagImMonat = new Date(year, month - 1, 1);                 // Erstellt den 1. Tag des Monats
 const wochentagErsterTag = ersterTagImMonat.getDay();                   // Welcher Wochentag ist der erste Tag im Monat
 const kalendertabelle = document.getElementById("kalendertabelle");
 const tabellenFelder = kalendertabelle.querySelectorAll("td");          // = sucht in der Tabelle td
 
-// Berechnung dazu sonntag
+
+// Berechnung dazu Sonntag
 let startPosition;
 
-if (wochentagErsterTag === 0) {
-        startPosition = 6;
-} else {
+        if (wochentagErsterTag === 0) {
+                startPosition = 6;
+        }               else {
         startPosition = wochentagErsterTag - 1;
 }
 
 let tag = 1;
 
-for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
-        tabellenFelder[i].textContent = tag;
-        tag++;
+        for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
+                tabellenFelder[i].textContent = tag;
+                tag++;
 }
 
 const tage = document.querySelectorAll("tbody td");
@@ -120,13 +121,15 @@ tage.forEach(function (tag) {
 
 });
 
-//Geburtstag
+
+//Geburtstage <---
 const Beispielgeburtstag = new Date(year, 8, 15);
         if (tag.textContent == Beispielgeburtstag.getDate() &&
                 datum.getMonth() == Beispielgeburtstag.getMonth()) {
 
         tag.classList.add("Beispielgeburtstag");
 }
+
 
 // Gesetzliche Feiertage in Deutschland
 const neujahr = day === 1 && month === 1;
@@ -135,7 +138,8 @@ const ersterWeihnachtsfeiertag = day === 25 && month === 12;
 const zweiterWeihnachtsfeiertag = day === 26 && month === 12;
 
 
-//Histroische Ereignisse am heutigen Tag
+
+// Histroische Ereignisse am heutigen Tag
 async function fetchData() {
 
         try {
@@ -143,7 +147,6 @@ async function fetchData() {
                 const today = new Date();
                 const month = today.getMonth() + 1;
                 const day = today.getDate() ;
-
                 const response = await fetch(`https://history.muffinlabs.com/date/${month}/${day}`);
 
                 if (!response.ok) {
@@ -161,7 +164,23 @@ async function fetchData() {
 
 }
 
+async function main() {
+        const data = await fetchData();
+        const events = data.data.Events;
 
+        document.getElementById("ereignis1").textContent = events[0].text;
+        document.getElementById("ereignis2").textContent = events[1].text;
+        document.getElementById("ereignis3").textContent = events[2].text;
+        document.getElementById("ereignis4").textContent = events[3].text;
+        document.getElementById("ereignis5").textContent = events[4].text;
+}
+
+main ();
+
+
+
+
+// Gesetzliche Feiertage ja/nein- Block
 
 if (neujahr) {
         document.getElementById("info5").textContent = "Heute ist 'Neujahr', was in Deutschland ein gesetzlicher Feiertag ist.";
@@ -180,6 +199,7 @@ else {
 }
 
 
+// Text im Rand-Block
 document.getElementById("titel").textContent = "Kalenderblatt vom " + datumText;
 document.getElementById("info1").textContent = "Der " + day + ". " + monatsName + " ist der " + nummern[wievielterWochentag] + " " + wochentagsname + " im Monat ";
 document.getElementById("info2").textContent = "Es handelt sich um den " + tagImJahr + ". Tag des Jahres " + year + ", was bedeutet, dass es noch " + verbleibendeTage + " Tage bis zum Jahresende sind.";
@@ -188,24 +208,9 @@ document.getElementById("aktuellerMonat").textContent = monatsName;
 document.getElementById("h3").textContent = "Historische Ereignisse am " + day + "." + monatsName;
  
 
-async function main() {
-        const data = await fetchData();
-
-        console.log(data);
-        const events = data.data.Events;
-        document.getElementById("ereignis1").textContent = events[0].text;
-        document.getElementById("ereignis2").textContent = events[1].text;
-        document.getElementById("ereignis3").textContent = events[2].text;
-        document.getElementById("ereignis4").textContent = events[3].text;
-        document.getElementById("ereignis5").textContent = events[4].text;
-}
-
-main();
-
 
 
 // Todo 
 // Geburtstage und Feiertage mit Icon in Kalenderblatt markieren
 // Neues Hintergrundbild erstellen
 // Historische Ereignisse auf Deutsch
-// Vor- und nach Monatstage im Kalenderblatt anzeigen
