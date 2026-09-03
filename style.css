@@ -6,14 +6,17 @@ h1 {
     text-transform: uppercase;
     letter-spacing: 1px;
     text-shadow:
-        0 0 5px #ff2a8a,
-        0 0 15px #ff2a8a;
+        0 0 10px #ff2a8a,
+        0 0 20px #440622;
     font-size: 400%;
     font-family: arial, sans-serif;
 }
 
 h2 {
     color: #00f0ff;
+    text-shadow:
+        0 0 10px #00f0ff,
+        0 0 20px #00595f;
     font-size: 40px;
     font-family: "Rajdhani", sans-serif;
     font-weight: 700;
@@ -27,7 +30,11 @@ h3 {
 }
 
 body    {
-    background-color: #080b10;
+    background-image: url("cyberpunk.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
     color: #e8e8e8;
     margin-top: 120px;
     margin-left: 100px;
@@ -42,9 +49,11 @@ body    {
     box-shadow:inset
         0 0 5px #ff2a8a,
         0 0 12px #ff2a8a;
-    /*
-    background-color: rgb(173, 68, 117);
-    */
+}
+
+.Beispielgeburtstag {
+    font-weight: bold;
+    color: #ff2a8a;  
 }
 
 .samstag {
@@ -57,6 +66,12 @@ body    {
     font-weight: bold;
 }
 
+table {
+    width: 100%;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    animation: erscheinen 0.8s;
+}
 
 td {
     background-color: #10151c;
@@ -66,8 +81,16 @@ td {
     text-align: center;
     padding: 20px;
     font-size: 1.6rem;
-    position: relative;
+    position: relative; 
+    height: 30px;
+    
+}
 
+td:hover {
+    background-color: #17232c;
+    color: #00f0ff;
+    box-shadow: inset 0 0 10px #00f0ff;
+    cursor: pointer;
 }
 
 .grid-item {
@@ -83,19 +106,6 @@ td {
     box-shadow: 0 20px 10px rgba(0, 0, 0, 0.2);
 }
 
-td:hover {
-    background-color: #17232c;
-    color: #00f0ff;
-    box-shadow: inset 0 0 10px #00f0ff;
-    cursor: pointer;
-}
-
-table {
-    width: 100%;
-    margin-top: 80px;
-    margin-bottom: 80px;
-    animation: erscheinen 0.8s;
-}
 
 @keyframes erscheinen {
     from {
@@ -132,7 +142,7 @@ p {
 }
 
 p span {
-     font-size: 140%;
+    font-size: 140%;
     background-color: #0d1218;
     border-left: 3px solid #ff2a8a;
     border-top: 1px solid #303944;
@@ -169,3 +179,5 @@ li::before {
     content: "•";
     margin-right: 20px;
 }
+
+

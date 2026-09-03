@@ -31,8 +31,7 @@ const month = datum.getMonth() + 1;
 const year = datum.getFullYear();
 
 
-
-//  0   1   2   3   4   5   6   7   8   9  10   11         
+                 //  0   1   2   3   4   5   6   7   8   9  10   11         
 const tageImMonat = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 let anzahlTageImMonat = tageImMonat[datum.getMonth()];
 if (datum.getMonth() === 1 && istSchaltjahr(year)) {
@@ -118,14 +117,23 @@ tage.forEach(function (tag) {
         if (tag.textContent == datum.getDate()) {
                 tag.classList.add("heute");
         }
+
 });
 
+//Geburtstag
+const Beispielgeburtstag = new Date(year, 8, 15);
+        if (tag.textContent == Beispielgeburtstag.getDate() &&
+                datum.getMonth() == Beispielgeburtstag.getMonth()) {
+
+        tag.classList.add("Beispielgeburtstag");
+}
 
 // Gesetzliche Feiertage in Deutschland
 const neujahr = day === 1 && month === 1;
 const tagDerDeutschenEinheit = day === 3 && month === 10;
 const ersterWeihnachtsfeiertag = day === 25 && month === 12;
 const zweiterWeihnachtsfeiertag = day === 26 && month === 12;
+
 
 //Histroische Ereignisse am heutigen Tag
 async function fetchData() {
@@ -175,7 +183,7 @@ else {
 document.getElementById("titel").textContent = "Kalenderblatt vom " + datumText;
 document.getElementById("info1").textContent = "Der " + day + ". " + monatsName + " ist der " + nummern[wievielterWochentag] + " " + wochentagsname + " im Monat ";
 document.getElementById("info2").textContent = "Es handelt sich um den " + tagImJahr + ". Tag des Jahres " + year + ", was bedeutet, dass es noch " + verbleibendeTage + " Tage bis zum Jahresende sind.";
-document.getElementById("info4").textContent = "Der Monat " + monatsName + " hat insgesamt 31 Tage";
+document.getElementById("info4").textContent = "Der Monat " + monatsName + " hat insgesamt " + anzahlTageImMonat + " Tage";
 document.getElementById("aktuellerMonat").textContent = monatsName;
 document.getElementById("h3").textContent = "Historische Ereignisse am " + day + "." + monatsName;
  
@@ -194,3 +202,10 @@ async function main() {
 
 main();
 
+
+
+// Todo 
+// Geburtstage und Feiertage mit Icon in Kalenderblatt markieren
+// Neues Hintergrundbild erstellen
+// Historische Ereignisse auf Deutsch
+// Vor- und nach Monatstage im Kalenderblatt anzeigen
