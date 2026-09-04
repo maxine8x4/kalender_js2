@@ -51,9 +51,9 @@ body    {
         0 0 12px #ff2a8a;
 }
 
-.Beispielgeburtstag {
-    font-weight: bold;
-    color: #ff2a8a;  
+.Geburtstag {
+    font-weight: bold;  
+    border-bottom: 5px solid #00f0ff;
 }
 
 .samstag {

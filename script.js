@@ -1,10 +1,6 @@
 const datum = new Date();
 
-document.title = "Kalenderblatt vom " + datum.toLocaleDateString("de-DE", {
-        day: "2-digit",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
+document.title = "Kalenderblatt vom " + datum.toLocaleDateString("de-DE", {     
 });
 
 const datumText = datum.toLocaleDateString("de-DE", {
@@ -110,6 +106,12 @@ let tag = 1;
 
         for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
                 tabellenFelder[i].textContent = tag;
+
+                
+        if (tag === 15 && month === 9){
+                tabellenFelder[i].classList.add("Geburtstag");
+        }
+        
                 tag++;
 }
 
@@ -122,13 +124,6 @@ tage.forEach(function (tag) {
 });
 
 
-//Geburtstage <---
-const Beispielgeburtstag = new Date(year, 8, 15);
-        if (tag.textContent == Beispielgeburtstag.getDate() &&
-                datum.getMonth() == Beispielgeburtstag.getMonth()) {
-
-        tag.classList.add("Beispielgeburtstag");
-}
 
 
 // Gesetzliche Feiertage in Deutschland
@@ -143,7 +138,6 @@ const zweiterWeihnachtsfeiertag = day === 26 && month === 12;
 async function fetchData() {
 
         try {
-
                 const today = new Date();
                 const month = today.getMonth() + 1;
                 const day = today.getDate() ;
@@ -168,13 +162,12 @@ async function main() {
         const data = await fetchData();
         const events = data.data.Events;
 
-        document.getElementById("ereignis1").textContent = events[0].text;
-        document.getElementById("ereignis2").textContent = events[1].text;
-        document.getElementById("ereignis3").textContent = events[2].text;
-        document.getElementById("ereignis4").textContent = events[3].text;
-        document.getElementById("ereignis5").textContent = events[4].text;
+        document.getElementById("ereignis1").textContent = events[51].text;
+        document.getElementById("ereignis2").textContent = events[50].text;
+        document.getElementById("ereignis3").textContent = events[49].text;
+        document.getElementById("ereignis4").textContent = events[48].text;
+        document.getElementById("ereignis5").textContent = events[47].text;
 }
-
 main ();
 
 
@@ -214,3 +207,11 @@ document.getElementById("h3").textContent = "Historische Ereignisse am " + day +
 // Geburtstage und Feiertage mit Icon in Kalenderblatt markieren
 // Neues Hintergrundbild erstellen
 // Historische Ereignisse auf Deutsch
+
+
+//Geburtstage
+const Beispielgeburtstag = new Date(year, 8, 15);
+console.log(Beispielgeburtstag)
+        if (datum.getTime() === Beispielgeburtstag.getTime()){
+                tabellenFelder[i].classList.add("Beispielgeburtstag");
+        }
