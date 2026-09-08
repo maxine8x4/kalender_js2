@@ -107,22 +107,42 @@ let tag = 1;
         for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
                 tabellenFelder[i].textContent = tag;
 
-                
+              //  [zelle,zelle,zelle]
+
+// Datum anklicken
+const clickDatum = new Date(year, month, tabellenFelder[i].textContent);         // erstellt ein Datum, das dem angeklickten Tag entspricht
+console.log(clickDatum)
+        if (clickDatum.getTime() === datum.getTime()) {
+                tabellenFelder[i].classList.add("clickDatum");
+        }
+
+
         if (tag === 15 && month === 9){
                 tabellenFelder[i].classList.add("Geburtstag");
         }
-        
+
                 tag++;
 }
+
 
 const tage = document.querySelectorAll("tbody td");
 tage.forEach(function (tag) {
         if (tag.textContent == datum.getDate()) {
-                tag.classList.add("heute");
+                tag.classList.add("heute"); 
+        
+                      
+                // dieseZelle = liste[woWirGeklicktHaben]
+                // neuesDatum = new Date(year, month, dieseZelle)
         }
-
+        
 });
 
+//Geburtstage
+const Beispielgeburtstag = new Date(year, 8, 15);
+console.log(Beispielgeburtstag)
+        if (datum.getTime() === Beispielgeburtstag.getTime()){
+                tabellenFelder[i].classList.add("Beispielgeburtstag");
+        }
 
 
 
@@ -199,19 +219,12 @@ document.getElementById("info2").textContent = "Es handelt sich um den " + tagIm
 document.getElementById("info4").textContent = "Der Monat " + monatsName + " hat insgesamt " + anzahlTageImMonat + " Tage";
 document.getElementById("aktuellerMonat").textContent = monatsName;
 document.getElementById("h3").textContent = "Historische Ereignisse am " + day + "." + monatsName;
- 
+
 
 
 
 // Todo 
 // Geburtstage und Feiertage mit Icon in Kalenderblatt markieren
-// Neues Hintergrundbild erstellen
 // Historische Ereignisse auf Deutsch
 
 
-//Geburtstage
-const Beispielgeburtstag = new Date(year, 8, 15);
-console.log(Beispielgeburtstag)
-        if (datum.getTime() === Beispielgeburtstag.getTime()){
-                tabellenFelder[i].classList.add("Beispielgeburtstag");
-        }
