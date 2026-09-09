@@ -1,6 +1,6 @@
 const datum = new Date();
 
-document.title = "Kalenderblatt vom " + datum.toLocaleDateString("de-DE", {     
+document.title = "Kalenderblatt vom " + datum.toLocaleDateString("de-DE", {
 });
 
 const datumText = datum.toLocaleDateString("de-DE", {
@@ -27,7 +27,7 @@ const month = datum.getMonth() + 1;
 const year = datum.getFullYear();
 
 
-                 //  0   1   2   3   4   5   6   7   8   9  10   11         
+//  0   1   2   3   4   5   6   7   8   9  10   11         
 const tageImMonat = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 let anzahlTageImMonat = tageImMonat[datum.getMonth()];
 if (datum.getMonth() === 1 && istSchaltjahr(year)) {
@@ -87,62 +87,77 @@ const letzterTag = new Date(year, month, 0);        // Letzter Tag des Monats
 
 
 // Berechnung passender Tag(Zahl) zu Wochentag(Mo, Di..)
-const ersterTagImMonat = new Date(year, month - 1, 1);                 // Erstellt den 1. Tag des Monats
-const wochentagErsterTag = ersterTagImMonat.getDay();                   // Welcher Wochentag ist der erste Tag im Monat
-const kalendertabelle = document.getElementById("kalendertabelle");
-const tabellenFelder = kalendertabelle.querySelectorAll("td");          // = sucht in der Tabelle td
 
-
-// Berechnung dazu Sonntag
-let startPosition;
+function clearGrid(tabellenFelder) {
+        for (let j = 0; j < tabellenFelder.length; j++) {
+                tabellenFelder[j].textContent = '';
+        }
+}
+// Berechnung dazu Sonntag und Kalender aktualisieren
+function generateCalendarGrid(neuesDatum) {
+        const year = neuesDatum.getFullYear()
+        const month = neuesDatum.getMonth() + 1;
+        const ersterTagImMonat = new Date(year, month - 1, 1);                  // Erstellt den 1. Tag des Monats
+        const wochentagErsterTag = ersterTagImMonat.getDay();                   // Welcher Wochentag ist der erste Tag im Monat
+        const kalendertabelle = document.getElementById("kalendertabelle");
+        const tabellenFelder = kalendertabelle.querySelectorAll("td");
+        console.log(tabellenFelder)        // = sucht in der Tabelle td
+        let startPosition;
 
         if (wochentagErsterTag === 0) {
                 startPosition = 6;
-        }               else {
-        startPosition = wochentagErsterTag - 1;
-}
+        } else {
+                startPosition = wochentagErsterTag - 1;
+        }
 
-let tag = 1;
+        let tag = 1;
+
+        clearGrid(tabellenFelder);
 
         for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
                 tabellenFelder[i].textContent = tag;
 
-              //  [zelle,zelle,zelle]
-
-// Datum anklicken
-const clickDatum = new Date(year, month, tabellenFelder[i].textContent);         // erstellt ein Datum, das dem angeklickten Tag entspricht
-console.log(clickDatum)
-        if (clickDatum.getTime() === datum.getTime()) {
-                tabellenFelder[i].classList.add("clickDatum");
-        }
+                //  [zelle,zelle,zelle]
 
 
-        if (tag === 15 && month === 9){
-                tabellenFelder[i].classList.add("Geburtstag");
-        }
+                if (tag === 15 && month === 9) {
+                        tabellenFelder[i].classList.add("Geburtstag");
+                }
 
                 tag++;
+        }
+
+
+        const tage = document.querySelectorAll("tbody td");
+        tage.forEach(function (tag) {
+                if (tag.textContent == neuesDatum.getDate()) {
+                        tag.classList.add("heute");
+
+                        function click() {
+
+                                const clickDatum = new Date(year, month, tabellenFelder[i].textContent);
+
+                                tabellenFelder[i].textContent = tag;
+
+                                // dieseZelle = liste[woWirGeklicktHaben]
+                                // neuesDatum = new Date(year, month, dieseZelle)
+
+
+                        }
+                }
+        });
 }
 
+generateCalendarGrid(datum);
+generateCalendarGrid(new Date(2026, 7, 9));
 
-const tage = document.querySelectorAll("tbody td");
-tage.forEach(function (tag) {
-        if (tag.textContent == datum.getDate()) {
-                tag.classList.add("heute"); 
-        
-                      
-                // dieseZelle = liste[woWirGeklicktHaben]
-                // neuesDatum = new Date(year, month, dieseZelle)
-        }
-        
-});
 
 //Geburtstage
 const Beispielgeburtstag = new Date(year, 8, 15);
 console.log(Beispielgeburtstag)
-        if (datum.getTime() === Beispielgeburtstag.getTime()){
-                tabellenFelder[i].classList.add("Beispielgeburtstag");
-        }
+if (datum.getTime() === Beispielgeburtstag.getTime()) {
+        tabellenFelder[i].classList.add("Beispielgeburtstag");
+}
 
 
 
@@ -160,7 +175,7 @@ async function fetchData() {
         try {
                 const today = new Date();
                 const month = today.getMonth() + 1;
-                const day = today.getDate() ;
+                const day = today.getDate();
                 const response = await fetch(`https://history.muffinlabs.com/date/${month}/${day}`);
 
                 if (!response.ok) {
@@ -188,7 +203,7 @@ async function main() {
         document.getElementById("ereignis4").textContent = events[48].text;
         document.getElementById("ereignis5").textContent = events[47].text;
 }
-main ();
+main();
 
 
 
@@ -223,8 +238,65 @@ document.getElementById("h3").textContent = "Historische Ereignisse am " + day +
 
 
 
-// Todo 
+// Todo
 // Geburtstage und Feiertage mit Icon in Kalenderblatt markieren
 // Historische Ereignisse auf Deutsch
+
+
+
+const hallo = "hallo welt"
+console.log(hallo);
+
+
+for (let i = 0; i < 10; i++) {
+        console.log("hallo welt");
+
+}
+
+for (let i = 1; i <= 10; i++) {
+        console.log(i);
+}
+
+
+let output = '1'
+for (let i = 0; i < 10; i++){
+        console.log(output)
+        output += ' 1'
+}
+
+// Aufgabe 1: console "hallo Welt"
+// Aufgabe 2:
+// console "hallo welt"
+// console "hallo welt"
+// console "hallo welt"
+// console "hallo welt"
+// console "hallo welt"
+// console "hallo welt"
+// console "hallo welt"
+// console "hallo welt"
+// console "hallo welt"
+// console "hallo welt"
+// mit einer schleife
+
+//Aufgabe 3:
+// 1
+// 2
+// 3
+// 4
+// 5
+// 6
+// 7
+// 8
+// 9
+// 10
+
+//Aufgabe 5:
+// 1
+// 12
+// 123
+// 1234
+// 12345
+// 123456
+// bis 10
 
 

@@ -55,9 +55,9 @@ body    {
     font-weight: bold;  
     border-bottom: 5px solid #00f0ff;
 
-    .fa-cake-candles {
-        color: rgb(177, 151, 252);
-}}
+   /* .fa-cake-candles {
+        color: rgb(177, 151, 252);*/
+}
 
 .samstag {
     color: #00f0ff;
