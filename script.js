@@ -27,7 +27,10 @@ const month = datum.getMonth() + 1;
 const year = datum.getFullYear();
 
 
-//  0   1   2   3   4   5   6   7   8   9  10   11         
+
+// Berechnung Schaltjahr
+
+                //  0   1   2   3   4   5   6   7   8   9  10   11         
 const tageImMonat = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 let anzahlTageImMonat = tageImMonat[datum.getMonth()];
 if (datum.getMonth() === 1 && istSchaltjahr(year)) {
@@ -35,7 +38,6 @@ if (datum.getMonth() === 1 && istSchaltjahr(year)) {
 }
 
 
-// Berechnung Schaltjahr
 function istSchaltjahr(jahr) {
         if (jahr % 400 == 0) {
                 return true;
@@ -93,8 +95,10 @@ function clearGrid(tabellenFelder) {
                 tabellenFelder[j].textContent = '';
         }
 }
+
 // Berechnung dazu Sonntag und Kalender aktualisieren
 function generateCalendarGrid(neuesDatum) {
+        
         const year = neuesDatum.getFullYear()
         const month = neuesDatum.getMonth() + 1;
         const ersterTagImMonat = new Date(year, month - 1, 1);                  // Erstellt den 1. Tag des Monats
@@ -102,6 +106,7 @@ function generateCalendarGrid(neuesDatum) {
         const kalendertabelle = document.getElementById("kalendertabelle");
         const tabellenFelder = kalendertabelle.querySelectorAll("td");
         console.log(tabellenFelder)        // = sucht in der Tabelle td
+
         let startPosition;
 
         if (wochentagErsterTag === 0) {
@@ -112,7 +117,7 @@ function generateCalendarGrid(neuesDatum) {
 
         let tag = 1;
 
-        clearGrid(tabellenFelder);
+clearGrid(tabellenFelder);
 
         for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
                 tabellenFelder[i].textContent = tag;
@@ -130,26 +135,31 @@ function generateCalendarGrid(neuesDatum) {
 
         const tage = document.querySelectorAll("tbody td");
         tage.forEach(function (tag) {
-                if (tag.textContent == neuesDatum.getDate()) {
+                tag.addEventListener("click", function () {
+                        const clickDatum = new Date(
+                                year,
+                                month -1,
+                                Number(tag.textContent)
+                        )
+                        console.log(clickDatum);
+                        generateCalendarGrid(clickDatum);
+                });
+                
+
+                /*if (tag.textContent == neuesDatum.getDate()) {
                         tag.classList.add("heute");
-
-                        function click() {
-
-                                const clickDatum = new Date(year, month, tabellenFelder[i].textContent);
-
-                                tabellenFelder[i].textContent = tag;
 
                                 // dieseZelle = liste[woWirGeklicktHaben]
                                 // neuesDatum = new Date(year, month, dieseZelle)
-
-
-                        }
-                }
-        });
+                        }*/
+                
+        })
 }
+                     
+
 
 generateCalendarGrid(datum);
-generateCalendarGrid(new Date(2026, 7, 9));
+generateCalendarGrid(new Date());
 
 
 //Geburtstage
@@ -196,12 +206,13 @@ async function fetchData() {
 async function main() {
         const data = await fetchData();
         const events = data.data.Events;
+      
 
-        document.getElementById("ereignis1").textContent = events[51].text;
-        document.getElementById("ereignis2").textContent = events[50].text;
-        document.getElementById("ereignis3").textContent = events[49].text;
-        document.getElementById("ereignis4").textContent = events[48].text;
-        document.getElementById("ereignis5").textContent = events[47].text;
+        document.getElementById("ereignis1").textContent = events[51].year + ": " + events[51].text;
+        document.getElementById("ereignis2").textContent = events[50].year + ": " + events[50].text;
+        document.getElementById("ereignis3").textContent = events[49].year + ": " + events[49].text;
+        document.getElementById("ereignis4").textContent = events[48].year + ": " + events[48].text;
+        document.getElementById("ereignis5").textContent = events[47].year + ": " + events[47].text;
 }
 main();
 
