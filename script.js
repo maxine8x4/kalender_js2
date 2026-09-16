@@ -88,76 +88,149 @@ const letzterTag = new Date(year, month, 0);        // Letzter Tag des Monats
 
 // Berechnung passender Tag(Zahl) zu Wochentag(Mo, Di..)
 
+
+
 function clearGrid(tabellenFelder) {
         for (let j = 0; j < tabellenFelder.length; j++) {
-                tabellenFelder[j].textContent = '';
+                tabellenFelder[j] = '';     
         }
 }
-// Berechnung dazu Sonntag und Kalender aktualisieren
+
+
 function generateCalendarGrid(neuesDatum) {
+        
         const year = neuesDatum.getFullYear()
         const month = neuesDatum.getMonth() + 1;
-        const ersterTagImMonat = new Date(year, month - 1, 1);                  // Erstellt den 1. Tag des Monats
-        const wochentagErsterTag = ersterTagImMonat.getDay();                   // Welcher Wochentag ist der erste Tag im Monat
+        const ersterTagImMonat = new Date(year, month - 1, 1);                  
+        const wochentagErsterTag = ersterTagImMonat.getDay();
         const kalendertabelle = document.getElementById("kalendertabelle");
         const tabellenFelder = kalendertabelle.querySelectorAll("td");
-        console.log(tabellenFelder)        // = sucht in der Tabelle td
+        console.log(tabellenFelder)        
         let startPosition;
-
+        
         if (wochentagErsterTag === 0) {
                 startPosition = 6;
         } else {
                 startPosition = wochentagErsterTag - 1;
         }
-
+        
         let tag = 1;
-
+        
         clearGrid(tabellenFelder);
-
+        
         for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
                 tabellenFelder[i].textContent = tag;
-
+                
                 //  [zelle,zelle,zelle]
-
-
+                
+                
                 if (tag === 15 && month === 9) {
                         tabellenFelder[i].classList.add("Geburtstag");
                 }
-
+                
                 tag++;
         }
-
-
+        
+        
         const tage = document.querySelectorAll("tbody td");
         tage.forEach(function (tag) {
+                tag.addEventListener("click", function() {
+                        const clickDatum = new Date(
+                                year,
+                                month -1,
+                                tag.textContent
+                        )
+                        neuerTitel(clickDatum);
+                        neueInfo(clickDatum);
+                        console.log(clickDatum);
+                        generateCalendarGrid(clickDatum);
+                        
+                        // dieseZelle = liste[woWirGeklicktHaben]
+                        // neuesDatum = new Date(year, month, dieseZelle)               
+                        
+                        
+                });
+                
                 if (tag.textContent == neuesDatum.getDate()) {
                         tag.classList.add("heute");
-
-                        function click() {
-
-                                const clickDatum = new Date(year, month, tabellenFelder[i].textContent);
-
-                                tabellenFelder[i].textContent = tag;
-
-                                // dieseZelle = liste[woWirGeklicktHaben]
-                                // neuesDatum = new Date(year, month, dieseZelle)
-
-
-                        }
                 }
+                
         });
+}       
+
+function neuerTitel(clickDatum) {
+        const titel = document.getElementById("titel")
+        titel.textContent = "Kalenderblatt vom " +
+        clickDatum.getDate() +
+        ". " + 
+        clickDatum.toLocaleDateString("de-DE", {month: "long"}) +
+        " " +
+        clickDatum.getFullYear();
+
 }
 
-generateCalendarGrid(datum);
-generateCalendarGrid(new Date(2026, 7, 9));
+function neueInfo(clickDatum){
+        
+        const tagImJahr = berechneTageSeitJahresbeginn(clickDatum);
+        
+        const jahresende = new Date(clickDatum.getFullYear(), 11, 31);
+        const unterschiedEnde = jahresende - clickDatum; 
+        const verbleibendeTage = Math.ceil(unterschiedEnde / (1000 * 60 * 60 * 24));
+        
+        let anzahlTageImMonat = tageImMonat[clickDatum.getMonth()];
+        if (clickDatum.getMonth() === 1 && istSchaltjahr(clickDatum.getFullYear())) {
+                anzahlTageImMonat++;
+        }
+        
+        
+        const info1 = document.getElementById("info1")
+        info1.textContent = "Der " +
+        clickDatum.getDate() +
+        ". " +
+        clickDatum.toLocaleDateString("de-DE", {month: "long"}) +
+        " ist der " +
+        Math.ceil(clickDatum.getDate()/ 7) +
+        ". " +
+        clickDatum.toLocaleDateString("de-DE", {weekday: "long"}) +
+        " im Monat ";
+        
+        const info2 = document.getElementById("info2")
+        info2.textContent = "Es handelt sich um den " +
+        tagImJahr +
+        ". Tag des Jahres " +
+        clickDatum.getFullYear() +
+        ", was bedeutet, dass es noch " +
+        verbleibendeTage +
+        " Tage bis zum Jahresende sind.";
+        
+        const info4 = document.getElementById("info4")
+        info4.textContent = "Der Monat " +
+        clickDatum.toLocaleDateString("de-DE", {month: "long"}) +
+        " hat insgesamt " +
+        anzahlTageImMonat +
+        " Tage";
+        console.log(anzahlTageImMonat);
+        
+        const aktuellerMonat = document.getElementById("aktuellerMonat")
+        aktuellerMonat.textContent = clickDatum.toLocaleDateString("de-DE", {month: "long"})
+        
+        const h3 = document.getElementById("h3")
+        h3.textContent = "Historische Ereignisse am " +
+        clickDatum.getDate() + "." +
+        clickDatum.toLocaleString("de-DE", {month: "long"})
+}
+
+
+generateCalendarGrid(new Date());
 
 
 //Geburtstage
-const Beispielgeburtstag = new Date(year, 8, 15);
-console.log(Beispielgeburtstag)
-if (datum.getTime() === Beispielgeburtstag.getTime()) {
-        tabellenFelder[i].classList.add("Beispielgeburtstag");
-}
+        const Beispielgeburtstag = new Date(year, 8, 15);
+        console.log(Beispielgeburtstag)
+        if (datum.getTime() === Beispielgeburtstag.getTime()) {
+                tabellenFelder[i].classList.add("Beispielgeburtstag");
+        }
+
 
 
 
@@ -197,11 +270,11 @@ async function main() {
         const data = await fetchData();
         const events = data.data.Events;
 
-        document.getElementById("ereignis1").textContent = events[51].text;
-        document.getElementById("ereignis2").textContent = events[50].text;
-        document.getElementById("ereignis3").textContent = events[49].text;
-        document.getElementById("ereignis4").textContent = events[48].text;
-        document.getElementById("ereignis5").textContent = events[47].text;
+        document.getElementById("ereignis1").textContent = events[1].year + ": " + events[1].text;
+        document.getElementById("ereignis2").textContent = events[2].year + ": " + events[2].text;
+        document.getElementById("ereignis3").textContent = events[3].year + ": " + events[3].text;
+        document.getElementById("ereignis4").textContent = events[4].year + ": " + events[4].text;
+        document.getElementById("ereignis5").textContent = events[5].year + ": " + events[5].text;
 }
 main();
 
@@ -244,7 +317,7 @@ document.getElementById("h3").textContent = "Historische Ereignisse am " + day +
 
 
 
-const hallo = "hallo welt"
+/*const hallo = "hallo welt"
 console.log(hallo);
 
 
@@ -259,44 +332,43 @@ for (let i = 1; i <= 10; i++) {
 
 
 let output = '1'
-for (let i = 0; i < 10; i++){
+for (let i = 0; i < 10; i++) {
         console.log(output)
         output += ' 1'
 }
 
-// Aufgabe 1: console "hallo Welt"
-// Aufgabe 2:
-// console "hallo welt"
-// console "hallo welt"
-// console "hallo welt"
-// console "hallo welt"
-// console "hallo welt"
-// console "hallo welt"
-// console "hallo welt"
-// console "hallo welt"
-// console "hallo welt"
-// console "hallo welt"
-// mit einer schleife
+let A5 = "10"
+for (let i = 0; i < 10; i++) {
+        console.log(A5 - i);
+}
 
-//Aufgabe 3:
-// 1
-// 2
-// 3
-// 4
-// 5
-// 6
-// 7
-// 8
-// 9
-// 10
-
-//Aufgabe 5:
-// 1
-// 12
-// 123
-// 1234
-// 12345
-// 123456
-// bis 10
+let A7 = "10 "
+for (let i = 9; i > 0; i--) {
+        console.log(A7 += i + " ");
+}
 
 
+
+/*
+//Aufgabe 6
+10 9 8 7 6 5 4 3 2 1 
+
+Aufgabe 7
+10
+10 9
+10 9 8 
+*/
+
+//9 % 3 = 0
+
+
+
+let a = ""
+for (let i = 1; i < 11; i++) 
+        if (i % 2 == 0){ 
+                a += i
+                console.log(a)
+        } //i++
+
+//console.log(a)
+// "2 4 6 8"
