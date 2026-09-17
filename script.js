@@ -78,16 +78,24 @@ const verbleibendeTage = Math.ceil(unterschiedEnde / (1000 * 60 * 60 * 24));    
 
 const text = "Es ist der " + nummern[wievielterWochentag] + " " + wochentagsname + " im Monat.";       // Erstellung des Textes, der den Wochentag im Monat beschreibt
 
-
-/*// Berechnung passender Wochentage
-const ersterTag = newDate(year, month - 1, 1);     // Erster Tag des Monats
-/*
-const letzterTag = new Date(year, month, 0);        // Letzter Tag des Monats
-*/
+feiertage(datum);
 
 
-// Berechnung passender Tag(Zahl) zu Wochentag(Mo, Di..)
+function button(neuesDatum) {
 
+        const vor = document.getElementById("button1")
+        const zurück = document.getElementById("button2")
+        
+        vor.forEach(function () {
+        monat.addEventListener("click", function() {
+                const clickButton = new month(
+                        month+2
+                )
+                button(clickButton);
+        })
+})
+        
+}
 
 
 function clearGrid(tabellenFelder) {
@@ -142,6 +150,8 @@ function generateCalendarGrid(neuesDatum) {
                         )
                         neuerTitel(clickDatum);
                         neueInfo(clickDatum);
+                        neueEreignisse(clickDatum);
+                        feiertage(clickDatum);
                         console.log(clickDatum);
                         generateCalendarGrid(clickDatum);
                         
@@ -156,7 +166,12 @@ function generateCalendarGrid(neuesDatum) {
                 }
                 
         });
+
+        
 }       
+
+generateCalendarGrid(new Date());
+
 
 function neuerTitel(clickDatum) {
         const titel = document.getElementById("titel")
@@ -166,7 +181,11 @@ function neuerTitel(clickDatum) {
         clickDatum.toLocaleDateString("de-DE", {month: "long"}) +
         " " +
         clickDatum.getFullYear();
-
+        
+        document.title = "Kalenderblatt vom " +
+        clickDatum.getDate() + "." +
+        clickDatum.getMonth() + "." +
+        clickDatum.getFullYear()
 }
 
 function neueInfo(clickDatum){
@@ -220,71 +239,65 @@ function neueInfo(clickDatum){
         clickDatum.toLocaleString("de-DE", {month: "long"})
 }
 
-
-generateCalendarGrid(new Date());
-
-
-//Geburtstage
-        const Beispielgeburtstag = new Date(year, 8, 15);
-        console.log(Beispielgeburtstag)
-        if (datum.getTime() === Beispielgeburtstag.getTime()) {
-                tabellenFelder[i].classList.add("Beispielgeburtstag");
-        }
-
-
-
-
-// Gesetzliche Feiertage in Deutschland
-const neujahr = day === 1 && month === 1;
-const tagDerDeutschenEinheit = day === 3 && month === 10;
-const ersterWeihnachtsfeiertag = day === 25 && month === 12;
-const zweiterWeihnachtsfeiertag = day === 26 && month === 12;
-
-
-
-// Histroische Ereignisse am heutigen Tag
-async function fetchData() {
-
+async function neueEreignisse(clickDatum){
+        
         try {
-                const today = new Date();
-                const month = today.getMonth() + 1;
-                const day = today.getDate();
-                const response = await fetch(`https://history.muffinlabs.com/date/${month}/${day}`);
-
+                const neuerMonat = clickDatum.getMonth()+1
+                const neuerTag = clickDatum.getDate()
+                const response = await fetch(`https://history.muffinlabs.com/date/${neuerMonat}/${neuerTag}`);
+                
+                
                 if (!response.ok) {
                         throw new Error("HTTP error!");
                 }
-
+                
                 const data = await response.json();
-
+                
                 console.log(data.data.Events);
+                const events = data.data.Events;
+                
+                document.getElementById("ereignis1").textContent = events[1].year + ": " + events[1].text;
+                document.getElementById("ereignis2").textContent = events[2].year + ": " + events[2].text;
+                document.getElementById("ereignis3").textContent = events[3].year + ": " + events[3].text;
+                document.getElementById("ereignis4").textContent = events[4].year + ": " + events[4].text;
+                document.getElementById("ereignis5").textContent = events[5].year + ": " + events[5].text;
+                
                 return data;
         }
         catch (error) {
                 console.error(error);
         }
-
 }
 
-async function main() {
-        const data = await fetchData();
-        const events = data.data.Events;
 
-        document.getElementById("ereignis1").textContent = events[1].year + ": " + events[1].text;
-        document.getElementById("ereignis2").textContent = events[2].year + ": " + events[2].text;
-        document.getElementById("ereignis3").textContent = events[3].year + ": " + events[3].text;
-        document.getElementById("ereignis4").textContent = events[4].year + ": " + events[4].text;
-        document.getElementById("ereignis5").textContent = events[5].year + ": " + events[5].text;
+
+//Geburtstage
+const Beispielgeburtstag = new Date(year, 8, 15);
+console.log(Beispielgeburtstag)
+if (datum.getTime() === Beispielgeburtstag.getTime()) {
+        tabellenFelder[i].classList.add("Beispielgeburtstag");
 }
-main();
 
 
+function feiertage(clickDatum) {
 
+        const neuerTag = clickDatum.getDate()
+        const neuerMonat = clickDatum.getMonth()+1
+
+
+// Gesetzliche Feiertage in Deutschland
+const neujahr = neuerTag === 1 && neuerMonat === 1;
+const tagDerDeutschenEinheit = neuerTag === 3 && neuerMonat === 10;
+const ersterWeihnachtsfeiertag = neuerTag === 25 &&neuerMonath === 12;
+const zweiterWeihnachtsfeiertag = neuerTag === 26 &&neuerMonath === 12;
+const septemberTag = neuerTag === 17 && neuerMonat === 9;
 
 // Gesetzliche Feiertage ja/nein- Block
-
 if (neujahr) {
         document.getElementById("info5").textContent = "Heute ist 'Neujahr', was in Deutschland ein gesetzlicher Feiertag ist.";
+}
+else if (septemberTag) {
+        document.getElementById("info5").textContent = "Heute ist Septembertag";
 }
 else if (tagDerDeutschenEinheit) {
         document.getElementById("info5").textContent = "Heute ist 'der Tag der Deutschen Einheit', was in Deutschland ein gesetzlicher Feiertag ist.";
@@ -298,6 +311,44 @@ else if (zweiterWeihnachtsfeiertag) {
 else {
         document.getElementById("info5").textContent = "Heute ist kein gesetzlicher Feiertag in Deutschland.";
 }
+//feiertage(clickDatum);
+}
+
+// Histroische Ereignisse am heutigen Tag
+async function fetchData() {
+        
+        try {
+                const today = new Date();
+                const month = today.getMonth() + 1;
+                const day = today.getDate();
+                const response = await fetch(`https://history.muffinlabs.com/date/${month}/${day}`);
+                
+                if (!response.ok) {
+                        throw new Error("HTTP error!");
+                }
+                
+                const data = await response.json();
+                
+                console.log(data.data.Events);
+                return data;
+        }
+        catch (error) {
+                console.error(error);
+        }
+        
+}
+
+async function main() {
+        const data = await fetchData();
+        const events = data.data.Events;
+
+        document.getElementById("ereignis1").textContent = events[1].year + ": " + events[1].text;
+        document.getElementById("ereignis2").textContent = events[2].year + ": " + events[2].text;
+        document.getElementById("ereignis3").textContent = events[3].year + ": " + events[3].text;
+        document.getElementById("ereignis4").textContent = events[4].year + ": " + events[4].text;
+        document.getElementById("ereignis5").textContent = events[5].year + ": " + events[5].text;
+}
+main();
 
 
 // Text im Rand-Block
@@ -314,61 +365,3 @@ document.getElementById("h3").textContent = "Historische Ereignisse am " + day +
 // Todo
 // Geburtstage und Feiertage mit Icon in Kalenderblatt markieren
 // Historische Ereignisse auf Deutsch
-
-
-
-/*const hallo = "hallo welt"
-console.log(hallo);
-
-
-for (let i = 0; i < 10; i++) {
-        console.log("hallo welt");
-
-}
-
-for (let i = 1; i <= 10; i++) {
-        console.log(i);
-}
-
-
-let output = '1'
-for (let i = 0; i < 10; i++) {
-        console.log(output)
-        output += ' 1'
-}
-
-let A5 = "10"
-for (let i = 0; i < 10; i++) {
-        console.log(A5 - i);
-}
-
-let A7 = "10 "
-for (let i = 9; i > 0; i--) {
-        console.log(A7 += i + " ");
-}
-
-
-
-/*
-//Aufgabe 6
-10 9 8 7 6 5 4 3 2 1 
-
-Aufgabe 7
-10
-10 9
-10 9 8 
-*/
-
-//9 % 3 = 0
-
-
-
-let a = ""
-for (let i = 1; i < 11; i++) 
-        if (i % 2 == 0){ 
-                a += i
-                console.log(a)
-        } //i++
-
-//console.log(a)
-// "2 4 6 8"
