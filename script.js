@@ -74,35 +74,36 @@ const wievielterWochentag = Math.ceil(day / 7);         // Berechnung, welcher W
 const jahresende = new Date(year, 11, 31);
 const unterschiedEnde = jahresende - datum;     // Berechnung der Differenz zwischen dem aktuellen Datum und dem Jahresende in Millisekunden
 const verbleibendeTage = Math.ceil(unterschiedEnde / (1000 * 60 * 60 * 24));     // Berechnung der verbleibenden Tage bis zum Jahresende
-
-
 const text = "Es ist der " + nummern[wievielterWochentag] + " " + wochentagsname + " im Monat.";       // Erstellung des Textes, der den Wochentag im Monat beschreibt
 
 feiertage(datum);
 
 
 function button(neuesDatum) {
-
+        
         const vor = document.getElementById("button1")
         const zurück = document.getElementById("button2")
         
         vor.forEach(function () {
-        monat.addEventListener("click", function() {
-                const clickButton = new month(
-                        month+2
-                )
+                monat.addEventListener("click", function() {
+                        const clickButton = new month(
+                                month+2
+                        )
                 button(clickButton);
         })
 })
-        
+
 }
 
 
 function clearGrid(tabellenFelder) {
         for (let j = 0; j < tabellenFelder.length; j++) {
-                tabellenFelder[j] = '';     
-        }
+                tabellenFelder[j] = '';
 }
+  
+}
+
+
 
 
 function generateCalendarGrid(neuesDatum) {
@@ -155,22 +156,23 @@ function generateCalendarGrid(neuesDatum) {
                         console.log(clickDatum);
                         generateCalendarGrid(clickDatum);
                         
-                        // dieseZelle = liste[woWirGeklicktHaben]
-                        // neuesDatum = new Date(year, month, dieseZelle)               
-                        
                         
                 });
                 
-                if (tag.textContent == neuesDatum.getDate()) {
+                if(tag.textContent == datum.getDate()){
                         tag.classList.add("heute");
                 }
+                /*if (tag.textContent == clickDatum.getDate()){
+                       neuesDatum.classList.add("ausgewaehltesDatum");
+                }*/
+        })
                 
-        });
 
         
-}       
+}     
 
 generateCalendarGrid(new Date());
+
 
 
 function neuerTitel(clickDatum) {
@@ -190,6 +192,7 @@ function neuerTitel(clickDatum) {
 
 function neueInfo(clickDatum){
         
+
         const tagImJahr = berechneTageSeitJahresbeginn(clickDatum);
         
         const jahresende = new Date(clickDatum.getFullYear(), 11, 31);
@@ -230,14 +233,18 @@ function neueInfo(clickDatum){
         " Tage";
         console.log(anzahlTageImMonat);
         
+
         const aktuellerMonat = document.getElementById("aktuellerMonat")
         aktuellerMonat.textContent = clickDatum.toLocaleDateString("de-DE", {month: "long"})
+        
         
         const h3 = document.getElementById("h3")
         h3.textContent = "Historische Ereignisse am " +
         clickDatum.getDate() + "." +
         clickDatum.toLocaleString("de-DE", {month: "long"})
+
 }
+
 
 async function neueEreignisse(clickDatum){
         
@@ -271,47 +278,41 @@ async function neueEreignisse(clickDatum){
 
 
 
-//Geburtstage
-const Beispielgeburtstag = new Date(year, 8, 15);
-console.log(Beispielgeburtstag)
-if (datum.getTime() === Beispielgeburtstag.getTime()) {
-        tabellenFelder[i].classList.add("Beispielgeburtstag");
-}
 
 
 function feiertage(clickDatum) {
-
+        
         const neuerTag = clickDatum.getDate()
         const neuerMonat = clickDatum.getMonth()+1
-
-
-// Gesetzliche Feiertage in Deutschland
-const neujahr = neuerTag === 1 && neuerMonat === 1;
-const tagDerDeutschenEinheit = neuerTag === 3 && neuerMonat === 10;
-const ersterWeihnachtsfeiertag = neuerTag === 25 &&neuerMonath === 12;
-const zweiterWeihnachtsfeiertag = neuerTag === 26 &&neuerMonath === 12;
-const septemberTag = neuerTag === 17 && neuerMonat === 9;
-
-// Gesetzliche Feiertage ja/nein- Block
-if (neujahr) {
-        document.getElementById("info5").textContent = "Heute ist 'Neujahr', was in Deutschland ein gesetzlicher Feiertag ist.";
-}
-else if (septemberTag) {
-        document.getElementById("info5").textContent = "Heute ist Septembertag";
-}
-else if (tagDerDeutschenEinheit) {
-        document.getElementById("info5").textContent = "Heute ist 'der Tag der Deutschen Einheit', was in Deutschland ein gesetzlicher Feiertag ist.";
-}
-else if (ersterWeihnachtsfeiertag) {
-        document.getElementById("info5").textContent = "Heute ist 'der erste Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
-}
-else if (zweiterWeihnachtsfeiertag) {
-        document.getElementById("info5").textContent = "Heute ist 'der zweite Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
-}
-else {
-        document.getElementById("info5").textContent = "Heute ist kein gesetzlicher Feiertag in Deutschland.";
-}
-//feiertage(clickDatum);
+        
+        
+        // Gesetzliche Feiertage in Deutschland
+        const neujahr = neuerTag === 1 && neuerMonat === 1;
+        const tagDerDeutschenEinheit = neuerTag === 3 && neuerMonat === 10;
+        const ersterWeihnachtsfeiertag = neuerTag === 25 &&neuerMonth === 12;
+        const zweiterWeihnachtsfeiertag = neuerTag === 26 &&neuerMonth === 12;
+        const septemberTag = neuerTag === 17 && neuerMonat === 9;
+        
+        // Gesetzliche Feiertage ja/nein- Block
+        if (neujahr) {
+                document.getElementById("info5").textContent = "Heute ist 'Neujahr', was in Deutschland ein gesetzlicher Feiertag ist.";
+        }
+        else if (septemberTag) {
+                document.getElementById("info5").textContent = "Heute ist Septembertag";
+        }
+        else if (tagDerDeutschenEinheit) {
+                document.getElementById("info5").textContent = "Heute ist 'der Tag der Deutschen Einheit', was in Deutschland ein gesetzlicher Feiertag ist.";
+        }
+        else if (ersterWeihnachtsfeiertag) {
+                document.getElementById("info5").textContent = "Heute ist 'der erste Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
+        }
+        else if (zweiterWeihnachtsfeiertag) {
+                document.getElementById("info5").textContent = "Heute ist 'der zweite Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
+        }
+        else {
+                document.getElementById("info5").textContent = "Heute ist kein gesetzlicher Feiertag in Deutschland.";
+        }
+        //feiertage(clickDatum);
 }
 
 // Histroische Ereignisse am heutigen Tag
@@ -341,7 +342,7 @@ async function fetchData() {
 async function main() {
         const data = await fetchData();
         const events = data.data.Events;
-
+        
         document.getElementById("ereignis1").textContent = events[1].year + ": " + events[1].text;
         document.getElementById("ereignis2").textContent = events[2].year + ": " + events[2].text;
         document.getElementById("ereignis3").textContent = events[3].year + ": " + events[3].text;
@@ -360,7 +361,12 @@ document.getElementById("aktuellerMonat").textContent = monatsName;
 document.getElementById("h3").textContent = "Historische Ereignisse am " + day + "." + monatsName;
 
 
-
+//Geburtstage
+const Beispielgeburtstag = new Date(year, 8, 15);
+console.log(Beispielgeburtstag)
+if (datum.getTime() === Beispielgeburtstag.getTime()) {
+        tabellenFelder[i].classList.add("Beispielgeburtstag");
+}
 
 // Todo
 // Geburtstage und Feiertage mit Icon in Kalenderblatt markieren
