@@ -51,6 +51,14 @@ body    {
         0 0 12px #ff2a8a;
 }
 
+.ausgewaehltesDatum {
+    font-weight: bold;
+    border: 2px solid #1c0346;
+    box-shadow:inset
+        0 0 5px #1c0346,
+        0 0 12px #1c0346;
+}
+
 .Beispielgeburtstag {       
     font-weight: bold;  
     border-bottom: 5px solid #00f0ff;
