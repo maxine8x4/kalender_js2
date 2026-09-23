@@ -1,7 +1,6 @@
 @import url('http://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
 
 h1 {
-    /*text-align: center;*/
     color: #ff2a8a;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -9,7 +8,7 @@ h1 {
         0 0 10px #ff2a8a,
         0 0 20px #440622;
     font-size: 400%;
-    font-family: arial, sans-serif;
+    font-family: "Rajdhani", sans-serif;
 }
 
 h2 {
@@ -20,6 +19,7 @@ h2 {
     font-size: 40px;
     font-family: "Rajdhani", sans-serif;
     font-weight: 700;
+
 }   
 
 h3 {
@@ -53,10 +53,10 @@ body    {
 
 .ausgewaehltesDatum {
     font-weight: bold;
-    border: 2px solid #1c0346;
+    border: 2px solid #b30670;
     box-shadow:inset
-        0 0 5px #1c0346,
-        0 0 12px #1c0346;
+        0 0 5px #b30670,
+        0 0 12px #b30670;
 }
 
 .Beispielgeburtstag {       
@@ -92,6 +92,34 @@ td {
     position: relative; 
     height: 30px;
     
+}
+
+.nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    
+}
+
+#buttonZurueck {
+    color: #ff2a8a;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+}
+#buttonWeiter{
+    color: #ff2a8a;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    
+}
+
+#buttonZurueck:hover,
+#buttonWeiter:hover {
+    color: #00f0ff;
 }
 
 td:hover {

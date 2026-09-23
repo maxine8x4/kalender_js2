@@ -1,19 +1,20 @@
 // on datum änderung: titelupdate, infotexte, oncalendargrid, api, feiertage
 // updatepage: bekommt neues datum
 
-const aktuellesDatum = new Date();
+let aktuellesDatum = new Date();
 
 //  0   1   2   3   4   5   6   7   8   9  10   11         
 const tageImMonat = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const nummern = ['', 'erste', 'zweite', 'dritte', 'vierte', 'fünfte'];
 
 function updateCalendar(neuesDatum) {
-        aktuellesDatum = neuesDatum
+        aktuellesDatum = neuesDatum;
+
         neuerTitel(aktuellesDatum)
         neueInfo(aktuellesDatum)
         generateCalendarGrid(aktuellesDatum)
-        //TODO : Feiertage() 
-        //TODO : Ereignisse()
+        feiertage(aktuellesDatum)
+        neueEreignisse(aktuellesDatum)
 }
 
 function berechneTageImMonat(datum) {
@@ -73,13 +74,16 @@ function neuerTitel(datum) {
 }
 function neueInfo(datum) {
         const day = datum.getDate()
-        const monatsName = datum.toLocaleDateString("de-DE", { month: "long" })
         const jahr = datum.getFullYear()
-        const wochentagsName = datum.toLocaleDateString("de-DE", { weekday: "long" })
-        const wievielterWochentag = Math.ceil(day / 7)
+
+        const monatsName = datum.toLocaleDateString("de-DE", { month: "long" });
+
+        const wochentagsName = datum.toLocaleDateString("de-DE", { weekday: "long" });
+
+        const wievielterWochentag = Math.ceil(day / 7);
         const tagImJahr = berechneTageSeitJahresbeginn(datum);
-        const verbleibendeTage = berechneVerbleibendeTage(datum)
-        const tageImMonat = berechneTageImMonat(datum)
+        const verbleibendeTage = berechneVerbleibendeTage(datum);
+        const anzahlTageImMonat = berechneTageImMonat(datum)
 
         const info1 = document.getElementById("info1")
         info1.textContent = "Der " +
@@ -105,7 +109,7 @@ function neueInfo(datum) {
         info4.textContent = "Der Monat " +
                 monatsName +
                 " hat insgesamt " +
-                tageImMonat +
+                anzahlTageImMonat +
                 " Tage";
 
         const aktuellerMonat = document.getElementById("aktuellerMonat")
@@ -113,7 +117,7 @@ function neueInfo(datum) {
 
         const h3 = document.getElementById("h3")
         h3.textContent = "Historische Ereignisse am " +
-                day + "." +
+                day + ". " +
                 monatsName
 }
 
@@ -121,12 +125,17 @@ function neueInfo(datum) {
 
 
 function clearGrid(tabellenFelder) {
-        for (let j = 0; j < tabellenFelder.length; j++) {
-                tabellenFelder[j].textContent = "";
-                tabellenFelder[j].classList.remove("ausgewaehltesDatum")
+        for (let i = 0; i < tabellenFelder.length; i++) {
+                tabellenFelder[i].textContent = "";
+
+                tabellenFelder[i].classList = null;
+                tabellenFelder[i].classList = null;
         }
 }
 
+function istBeispielGeburtstag(datum) {
+        return datum.getDate() === 15 && datum.getMonth() === 8;
+}
 
 function generateCalendarGrid(datum) {
 
@@ -137,6 +146,8 @@ function generateCalendarGrid(datum) {
         const wochentagErsterTag = ersterTagImMonat.getDay();
         const kalendertabelle = document.getElementById("kalendertabelle");
         const tabellenFelder = kalendertabelle.querySelectorAll("td");
+        clearGrid(tabellenFelder);
+
         let startPosition;
 
         if (wochentagErsterTag === 0) {
@@ -147,16 +158,16 @@ function generateCalendarGrid(datum) {
 
         let tag = 1;
 
-        clearGrid(tabellenFelder);
+
 
         for (let i = startPosition; i < tabellenFelder.length && tag <= anzahlTageImMonat; i++) {
                 tabellenFelder[i].textContent = tag;
-                const ZellenDatum = new Date(year, month, tag)
+                const zellenDatum = new Date(year, month, tag)
                 //  [zelle,zelle,zelle]
 
 
-                if (tag === 15 && month === 9) {
-                        tabellenFelder[i].classList.add("Beispielgeburtstag");
+                if (istBeispielGeburtstag(zellenDatum)) {
+                        tabellenFelder[i].classList.add("Beispielgeburtstag")
                 }
 
                 tag++;
@@ -164,8 +175,15 @@ function generateCalendarGrid(datum) {
 
         tabellenFelder.forEach(function (zelle) {
                 zelle.onclick = function () {
+
+                        if (zelle.textContent === "") {
+                                return;
+                        }
+
                         const clickDatum = new Date(
-                                year, month, Number(zelle.textContent)
+                                datum.getFullYear(),
+                                datum.getMonth(),
+                                Number(zelle.textContent)
                         )
                         updateCalendar(clickDatum);
 
@@ -181,22 +199,22 @@ function button() {
         const next = document.getElementById("buttonWeiter")
         const back = document.getElementById("buttonZurueck")
 
-        if (next){
-                next.onclick = function(){
-                        const neuesDatum = new Date (
+        if (next) {
+                next.onclick = function () {
+                        const neuesDatum = new Date(
                                 aktuellesDatum.getFullYear(),
-                                aktuellesDatum.getMonth()+1,
-                                1 
+                                aktuellesDatum.getMonth() + 1,
+                                1
                         )
                         updateCalendar(neuesDatum);
                 }
         }
 
-        if (back){
-                back.onclick = function(){
-                        const neuesDatum = new Date (
+        if (back) {
+                back.onclick = function () {
+                        const neuesDatum = new Date(
                                 aktuellesDatum.getFullYear(),
-                                aktuellesDatum.getMonth()-1,
+                                aktuellesDatum.getMonth() - 1,
                                 1
                         )
                         updateCalendar(neuesDatum);
@@ -205,45 +223,10 @@ function button() {
 
 }
 
+function feiertage(datum) {
 
-async function neueEreignisse(clickDatum) {
-
-        try {
-                const neuerMonat = clickDatum.getMonth() + 1
-                const neuerTag = clickDatum.getDate()
-                const response = await fetch(`https://history.muffinlabs.com/date/${neuerMonat}/${neuerTag}`);
-
-
-                if (!response.ok) {
-                        throw new Error("HTTP error!");
-                }
-
-                const data = await response.json();
-
-                console.log(data.data.Events);
-                const events = data.data.Events;
-
-                document.getElementById("ereignis1").textContent = events[1].year + ": " + events[1].text;
-                document.getElementById("ereignis2").textContent = events[2].year + ": " + events[2].text;
-                document.getElementById("ereignis3").textContent = events[3].year + ": " + events[3].text;
-                document.getElementById("ereignis4").textContent = events[4].year + ": " + events[4].text;
-                document.getElementById("ereignis5").textContent = events[5].year + ": " + events[5].text;
-
-                return data;
-        }
-        catch (error) {
-                console.error(error);
-        }
-}
-
-
-
-
-
-function feiertage(clickDatum) {
-
-        const neuerTag = clickDatum.getDate()
-        const neuerMonat = clickDatum.getMonth() + 1
+        const neuerTag = datum.getDate()
+        const neuerMonat = datum.getMonth() + 1
 
 
 
@@ -252,76 +235,81 @@ function feiertage(clickDatum) {
         const tagDerDeutschenEinheit = neuerTag === 3 && neuerMonat === 10;
         const ersterWeihnachtsfeiertag = neuerTag === 25 && neuerMonat === 12;
         const zweiterWeihnachtsfeiertag = neuerTag === 26 && neuerMonat === 12;
-        const septemberTag = neuerTag === 17 && neuerMonat === 9;
+
+        const info5 = document.getElementById("info5");
 
 
         // Gesetzliche Feiertage ja/nein- Block
         if (neujahr) {
-                document.getElementById("info5").textContent = "Heute ist 'Neujahr', was in Deutschland ein gesetzlicher Feiertag ist.";
-        }
-        else if (septemberTag) {
-                document.getElementById("info5").textContent = "Heute ist Septembertag";
+                info5.textContent = "Heute ist 'Neujahr', was in Deutschland ein gesetzlicher Feiertag ist.";
         }
         else if (tagDerDeutschenEinheit) {
-                document.getElementById("info5").textContent = "Heute ist 'der Tag der Deutschen Einheit', was in Deutschland ein gesetzlicher Feiertag ist.";
+                info5.textContent = "Heute ist 'der Tag der Deutschen Einheit', was in Deutschland ein gesetzlicher Feiertag ist.";
         }
         else if (ersterWeihnachtsfeiertag) {
-                document.getElementById("info5").textContent = "Heute ist 'der erste Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
+                info5.textContent = "Heute ist 'der erste Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
         }
         else if (zweiterWeihnachtsfeiertag) {
-                document.getElementById("info5").textContent = "Heute ist 'der zweite Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
+                info5.textContent = "Heute ist 'der zweite Weihnachtsfeiertag', was in Deutschland ein gesetzlicher Feiertag ist.";
         }
         else {
-                document.getElementById("info5").textContent = "Heute ist kein gesetzlicher Feiertag in Deutschland.";
+                info5.textContent = "Heute ist kein gesetzlicher Feiertag in Deutschland.";
         }
 
 }
 
-// Histroische Ereignisse am heutigen Tag
-async function fetchData() {
+async function neueEreignisse(datum) {
+
+        for (let i = 1; i < 5; i++) {
+                document.getElementById("ereignis" + i).textContent =
+                        "Ereignisse werden geladen...";
+        }
 
         try {
-                const today = new Date();
-                const month = today.getMonth() + 1;
-                const day = today.getDate();
-                const response = await fetch(`https://history.muffinlabs.com/date/${month}/${day}`);
+                const neuerMonat = datum.getMonth() + 1
+                const neuerTag = datum.getDate()
+
+                const response = await fetch(`https://history.muffinlabs.com/date/${neuerMonat}/${neuerTag}`);
+
 
                 if (!response.ok) {
-                        throw new Error("HTTP error!");
+                        throw new Error("HTTP error:" + response.status);
                 }
 
                 const data = await response.json();
 
-                console.log(data.data.Events);
-                return data;
-        }
-        catch (error) {
-                console.error(error);
-        }
+                if (datum !== aktuellesDatum) {
+                        return;
+                }
 
+                const events = data.data.Events;
+
+                for (let i = 0; i < 5; i++) {
+                        const feld = document.getElementById("ereignis" + (i + 1));
+
+                        if (events[i]) {
+                                feld.textContent = events[i].year + ": " + events[i].text;
+                        } else {
+                                feld.textContent = "Kein weiteres Ereignis vorhanden.";
+                        }
+                }
+        } catch (error) {
+                console.error(error);
+
+                if (datum !== aktuellesDatum) {
+                        return;
+                }
+
+                for (let i = 1; i < 5; i++) {
+                        document.getElelemtById("ereignis" + i).textContent =
+                                "Ereignisse konnten nicht geladen werden.";
+                }
+        }
 }
 
-async function main() {
-        button()
+function main() {
+        button();
         updateCalendar(aktuellesDatum)
-        const data = await fetchData();
-        const events = data.data.Events;
-
-        document.getElementById("ereignis1").textContent = events[1].year + ": " + events[1].text;
-        document.getElementById("ereignis2").textContent = events[2].year + ": " + events[2].text;
-        document.getElementById("ereignis3").textContent = events[3].year + ": " + events[3].text;
-        document.getElementById("ereignis4").textContent = events[4].year + ": " + events[4].text;
-        document.getElementById("ereignis5").textContent = events[5].year + ": " + events[5].text;
 }
 main();
-
-
-// Text im Rand-Block
-document.getElementById("titel").textContent = "Kalenderblatt vom " + datumText;
-document.getElementById("info1").textContent = "Der " + day + ". " + monatsName + " ist der " + nummern[wievielterWochentag] + " " + wochentagsname + " im Monat ";
-document.getElementById("info2").textContent = "Es handelt sich um den " + tagImJahr + ". Tag des Jahres " + year + ", was bedeutet, dass es noch " + verbleibendeTage + " Tage bis zum Jahresende sind.";
-document.getElementById("info4").textContent = "Der Monat " + monatsName + " hat insgesamt " + anzahlTageImMonat + " Tage";
-document.getElementById("aktuellerMonat").textContent = monatsName;
-document.getElementById("h3").textContent = "Historische Ereignisse am " + day + "." + monatsName;
-
 
