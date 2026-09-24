@@ -134,7 +134,7 @@ function clearGrid(tabellenFelder) {
 }
 
 function istBeispielGeburtstag(datum) {
-        return datum.getDate() === 15 && datum.getMonth() === 8;
+        return datum.getDate() === 2 && datum.getMonth() === 9;
 }
 
 function generateCalendarGrid(datum) {
